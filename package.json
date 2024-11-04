@@ -1,0 +1,19 @@
+{
+  "name": "what-the-sh-t",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lralic4/what-the-sh-t.git"
+  },
+  "author": "lralic4",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lralic4/what-the-sh-t/issues"
+  },
+  "homepage": "https://github.com/lralic4/what-the-sh-t#readme"
+}
