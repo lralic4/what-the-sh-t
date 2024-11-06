@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect
 import tensorflow as tf
 import numpy as np
 import os
+import uuid
 
 app = Flask(__name__)
 IMG_HEIGHT = 180
@@ -19,25 +20,28 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def save_image(request):
-
     if 'file' not in request.files:
-        flash('No file part')
+        print('No file part')
         return redirect(request.url)
     
     file = request.files['file']
     
     if file.filename == '':
-        flash('No selected file')
+        print('No selected file')
         return redirect(request.url)
     if file and allowed_file(file.filename):
-        file.save('./temp.jpeg')  
+        print('Saving file - ', file.filename)
+        filename = str(uuid.uuid4())
+        file.save(f'./{filename}.jpeg')  
+
+        return filename
 
 @app.route('/bristol-chart', methods=['POST'])
 def get_bristol_chart_classification():
-    save_image(request)
+    filename = save_image(request)
 
-    fullPath = os.path.abspath("./temp.jpeg")  # or similar, depending on your scenario
-    image_path = tf.keras.utils.get_file('temp.jpeg', 'file://'+fullPath)
+    fullPath = os.path.abspath(f'./{filename}.jpeg')  # or similar, depending on your scenario
+    image_path = tf.keras.utils.get_file(f'{filename}.jpeg', 'file://'+fullPath)
 
     img = tf.keras.utils.load_img(
         image_path, target_size=(IMG_HEIGHT, IMG_WIDTH)
