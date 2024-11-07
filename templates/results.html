@@ -1,22 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <title>What the Sh-t is this Sh-t?</title>
-  </head>
-  <body>
-    <h1>Here are your results</h1>
-    <p>
-      Your sh-t most closely resembles a {{ class }} with a confidence of {{
-      confidence }}
-    </p>
+{% extends 'index.html' %} {% block content %}
+<h1>Here are your results</h1>
+<p>
+  Your sh-t most closely resembles a {{ class }} with a confidence of {{
+  confidence }}
+</p>
 
-    <form method="GET" action="/">
-      <input type="submit" value="Back" />
-    </form>
-  </body>
-</html>
+<form method="GET" action="/">
+  <input type="submit" value="Back" />
+</form>
+{% endblock %}

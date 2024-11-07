@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
+    <title>What the Sh-t is this Sh-t</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>What the Sh-t is this Sh-t?</title>
   </head>
-  <body>
-    <h1>Let's send this to the lab</h1>
 
-    <form method="POST" action="/bristol-chart" enctype="multipart/form-data">
-      <input type="file" name="file" />
-      <input type="submit" value="Upload" />
-    </form>
-  </body>
+  {% block content %}
+  <h1>Let's send this to the lab</h1>
+
+  <form method="POST" action="/bristol-chart" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <input type="submit" value="Upload" />
+  </form>
+  {% endblock %}
 </html>
