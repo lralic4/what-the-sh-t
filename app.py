@@ -31,11 +31,8 @@ def save_image(request):
         return redirect(request.url)
     if file and allowed_file(file.filename):
         print('Saving file - ', file.filename)
-
-        ''' 
-        This version of tensorflow caches files -
-        need to use different file name to avoid cache
-        '''
+ 
+        # Use unique file name to prevent caching file
         filename = str(uuid.uuid4())
         file.save(f'./{filename}.jpeg') 
 
