@@ -4,5 +4,5 @@
 
 ```
 pip install -r requirements
-python3 app.py
+flask --app app run --debug
 ```

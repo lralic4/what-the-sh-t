@@ -12,29 +12,28 @@
     />
   </head>
   <body data-bs-theme="dark">
-    <nav class="navbar navbar-expand-xl bg-dark" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-xxl bg-dark" data-bs-theme="dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand d-flex justify-content-center" href="/">
           <img
             src="{{url_for('static', filename='poop_icon.png')}}"
             alt="Poop
           Icon"
-            width="20%"
-            height="20%"
+            width="40%"
+            height="40%"
             class="d-inline-block align-text-center"
           />
-          <em>What the Sh-t is this Sh-t!?</em>
         </a>
       </div>
     </nav>
 
-    <div class="container-xxl">
-      {% block content %}
+    {% block content %}
 
+    <div class="container-xxl">
       <form method="POST" action="/bristol-chart" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="formFile" class="form-label"
-            >Let's get your specimen sent to the lab</label
+            >Let's get your specimen sent to the lab!</label
           >
           <input
             class="form-control"
@@ -46,9 +45,9 @@
         </div>
         <button type="submit" class="btn btn-primary">Upload</button>
       </form>
-
-      {% endblock %}
     </div>
+
+    {% endblock %}
 
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
