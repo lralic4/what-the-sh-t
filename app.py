@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import tensorflow as tf
 import numpy as np
 import os
@@ -63,7 +63,7 @@ def get_bristol_chart_classification():
 
     context = {
         'class': CLASS_NAMES[np.argmax(score)],
-        'confidence': 100 * np.max(score)
+        'confidence': round(100 * np.max(score), 2)
     }
 
     return render_template('results.html', **context)
