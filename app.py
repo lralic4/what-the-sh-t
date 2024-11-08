@@ -9,7 +9,7 @@ app = Flask(__name__)
 IMG_HEIGHT = 180
 IMG_WIDTH = 180
 ALLOWED_EXTENSIONS = {'jpeg'}
-MODEL = tf.keras.models.load_model('../bristol-model/bristol-model.h5')
+MODEL = tf.keras.models.load_model('./bristol-model/bristol-model.h5')
 
 BRISTOL_STOOLS = [
     {'name': 'Type 1', 'title': 'Separate Hard Lumps', 'description': 'If your poop resembles separate hard lumps, it falls under Type 1 on the Bristol Stool Chart. This shape indicates constipation and suggests that your stool is spending too much time in the colon, causing excessive water absorption. It may be a sign of inadequate fiber intake, dehydration, or certain medications.', 'img_link': 'type-1.png'},
