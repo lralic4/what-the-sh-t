@@ -1,19 +1,23 @@
 {% extends 'index.html' %} {% block content %}
 
 <div class="card" style="width: 18rem">
-  <img src="..." class="card-img-top" alt="..." />
+  <div class="card-header">Results</div>
+  <img
+    src="{{ url_for('static', filename=img_link) }}"
+    class="card-img-top"
+    alt="Bristol Stool Icon"
+    height="100%"
+    width="100%"
+  />
   <div class="card-body">
-    <h5 class="card-title">Results - {{ class }}</h5>
-    <p class="card-text">
-      Your specimen most closely resembles a {{ class }} with a confidence of
-      <strong>{{ confidence }}</strong>
-    </p>
-    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+    <h5 class="card-title">{{ name }} - {{ title }}</h5>
+    <p class="card-text">Confidence - <strong>{{ confidence }}%</strong></p>
+    <p class="card-text">Description - {{ description }}</p>
+    <a href="/" class="btn btn-primary">Back</a>
+  </div>
+  <div class="card-footer text-body-secondary">
+    * All images and descriptions were sourced from https://poopedia.org/
   </div>
 </div>
-
-<form method="GET" action="/">
-  <button type="submit" class="btn btn-primary">Back</button>
-</form>
 
 {% endblock %}

@@ -7,9 +7,19 @@ import uuid
 app = Flask(__name__)
 IMG_HEIGHT = 180
 IMG_WIDTH = 180
-CLASS_NAMES = ['type-1', 'type-2', 'type-3', 'type-4', 'type-5', 'type-6', 'type-7']
+# CLASS_NAMES = ['Type-1', 'Type-2', 'Type-3', 'Type-4', 'Type-5', 'Type-6', 'Type-7']
 ALLOWED_EXTENSIONS = {'jpeg'}
 MODEL = tf.keras.models.load_model('./bristol-model/bristol-model.h5')
+
+BRISTOL_STOOLS = [
+    {'name': 'Type 1', 'title': 'Separate Hard Lumps', 'description': 'If your poop resembles separate hard lumps, it falls under Type 1 on the Bristol Stool Chart. This shape indicates constipation and suggests that your stool is spending too much time in the colon, causing excessive water absorption. It may be a sign of inadequate fiber intake, dehydration, or certain medications.', 'img_link': 'type-1.png'},
+    {'name': 'Type 2', 'title': 'Lumpy and Sausage-Like', 'description': 'Type 2 stool is characterized by lumpy and sausage-like appearance. While it indicates mild constipation, it is closer to the ideal poop shape. This suggests that you may need to increase your fiber intake, drink more water, and ensure regular physical activity to promote better bowel movements.', 'img_link': 'type-2.png'},
+    {'name': 'Type 3', 'title': 'Sausage-Like with Cracks', 'description': 'Type 3 stool is sausage-like with cracks on its surface. It indicates normal bowel movements and signifies a healthy balance of water content and stool formation. This shape represents a healthy poop consistency that is relatively easy to pass.', 'img_link': 'type-3.png'},
+    {'name': 'Type 4', 'title': 'Smooth and Sausage-Like', 'description': 'Type 4 stool, often considered the “Goldilocks” of poop shapes, is smooth and sausage-like, resembling a well-formed snake. It indicates a healthy balance of fiber, water, and transit time through the colon. Type 4 is the ideal poop shape, suggesting a healthy digestive system and regular bowel movements.', 'img_link': 'type-4.png'}, 
+    {'name': 'Type 5', 'title': 'Soft Blobs with Clear-Cut Edges', 'description': 'Type 5 stool appears as soft blobs with clear-cut edges. It is looser than Type 4 but still maintains some form. This shape may indicate a slightly accelerated transit time through the colon, possibly due to a high-fiber diet or certain medications.', 'img_link': 'type-5.png'},
+    {'name': 'Type 6', 'title': 'Fluffy and Mashed Potatoes-Like', 'description': 'Type 6 stool has a fluffy and mashed potatoes-like consistency. It suggests looser stools and may be associated with conditions such as irritable bowel syndrome (IBS), dietary factors, or certain medications. If you consistently experience Type 6 stools without any specific reason, it is advisable to seek medical evaluation.', 'img_link': 'type-6.png'},
+    {'name': 'Type 7', 'title': 'Watery and Entirely Liquid', 'description': 'Type 7 stool is entirely liquid, resembling watery diarrhea. This shape indicates severe diarrhea and suggests an increased fluid content in the stool. It can be a result of infections, food poisoning, medications, or gastrointestinal disorders. If you experience persistent Type 7 stools, it is crucial to seek medical attention for proper diagnosis and treatment.', 'img_link': 'type-7.png'},
+]
 
 @app.route('/')
 def home():
@@ -55,14 +65,19 @@ def get_bristol_chart_classification():
     score = tf.nn.softmax(predictions[0])
 
     os.remove(f'./{filename}.jpeg')
+    
+    index = np.argmax(score)
 
     print(
         "This image most likely belongs to {} with a {:.2f} percent confidence."
-        .format(CLASS_NAMES[np.argmax(score)], 100 * np.max(score))
+        .format(BRISTOL_STOOLS[index]['name'], 100 * np.max(score))
     )
 
     context = {
-        'class': CLASS_NAMES[np.argmax(score)],
+        'name': BRISTOL_STOOLS[index]['name'],
+        'title': BRISTOL_STOOLS[index]['title'],
+        'description': BRISTOL_STOOLS[index]['description'],
+        'img_link': BRISTOL_STOOLS[index]['img_link'],
         'confidence': round(100 * np.max(score), 2)
     }
 
