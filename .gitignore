@@ -3,3 +3,4 @@ training-data/**
 **.DS_Store**
 .vercel
 **.ipynb_checkpoints
+**__pycache__**
