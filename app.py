@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 IMG_HEIGHT = 180
 IMG_WIDTH = 180
-ALLOWED_EXTENSIONS = {'jpeg'}
+ALLOWED_EXTENSIONS = {'jpeg', 'png', 'jpg'}
 MODEL = model = torch.load('./bristol-model/model.pth', weights_only=False)
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -58,18 +58,19 @@ def save_image(request):
         return redirect(request.url)
     if file and allowed_file(file.filename):
         print('Saving file - ', file.filename)
+        filename, ext = os.path.splitext(file.filename)
  
         # Use unique file name to prevent caching file
         filename = str(uuid.uuid4())
-        file.save(f'./{filename}.jpeg') 
+        file.save(f'./{filename}{ext}') 
 
-        return filename
+        return filename, ext
 
 @app.route('/bristol-chart', methods=['POST'])
 def get_bristol_chart_classification():
-    filename = save_image(request)
+    filename, ext = save_image(request)
 
-    fullPath = os.path.abspath(f'./{filename}.jpeg')  # or similar, depending on your scenario
+    fullPath = os.path.abspath(f'./{filename}{ext}')  # or similar, depending on your scenario
 
     img = Image.open(fullPath)
     img = data_transforms['val'](img)
@@ -82,7 +83,7 @@ def get_bristol_chart_classification():
         probs = torch.nn.functional.softmax(outputs, dim=1)
         conf, _ = torch.max(probs, 1)
 
-    os.remove(f'./{filename}.jpeg')
+    os.remove(f'./{filename}{ext}')
     
     index = preds[0]
     confidence = conf.item()
