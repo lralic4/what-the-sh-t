@@ -101,6 +101,3 @@ def get_bristol_chart_classification():
     }
 
     return render_template('results.html', **context)
-
-if __name__ == '__main__':
-    app.run()
