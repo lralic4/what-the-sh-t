@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
-import tensorflow as tf
-import numpy as np
+import torch
+from torchvision import transforms
+from PIL import Image
 import os
 import uuid
 
@@ -9,7 +10,23 @@ app = Flask(__name__)
 IMG_HEIGHT = 180
 IMG_WIDTH = 180
 ALLOWED_EXTENSIONS = {'jpeg'}
-MODEL = tf.keras.models.load_model('./bristol-model/bristol-model.h5')
+MODEL = model = torch.load('./bristol-model/model.pth', weights_only=False)
+
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+data_transforms = {
+    'train': transforms.Compose([
+        transforms.RandomResizedCrop(224),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+    'val': transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+}
 
 BRISTOL_STOOLS = [
     {'name': 'Type 1', 'title': 'Separate Hard Lumps', 'description': 'If your poop resembles separate hard lumps, it falls under Type 1 on the Bristol Stool Chart. This shape indicates constipation and suggests that your stool is spending too much time in the colon, causing excessive water absorption. It may be a sign of inadequate fiber intake, dehydration, or certain medications.', 'img_link': 'type-1.png'},
@@ -54,22 +71,25 @@ def get_bristol_chart_classification():
 
     fullPath = os.path.abspath(f'./{filename}.jpeg')  # or similar, depending on your scenario
 
-    img = tf.keras.utils.load_img(
-        fullPath, target_size=(IMG_HEIGHT, IMG_WIDTH)
-    )
-    img_array = tf.keras.utils.img_to_array(img)
-    img_array = tf.expand_dims(img_array, 0) # Create a batch
+    img = Image.open(fullPath)
+    img = data_transforms['val'](img)
+    img = img.unsqueeze(0)
+    img = img.to(device)
 
-    predictions = MODEL.predict(img_array)
-    score = tf.nn.softmax(predictions[0])
+    with torch.no_grad():
+        outputs = model(img)
+        _, preds = torch.max(outputs, 1)
+        probs = torch.nn.functional.softmax(outputs, dim=1)
+        conf, _ = torch.max(probs, 1)
 
     os.remove(f'./{filename}.jpeg')
     
-    index = np.argmax(score)
+    index = preds[0]
+    confidence = conf.item()
 
     print(
         "This image most likely belongs to {} with a {:.2f} percent confidence."
-        .format(BRISTOL_STOOLS[index]['name'], 100 * np.max(score))
+        .format(BRISTOL_STOOLS[index]['name'], 100 * confidence)
     )
 
     context = {
@@ -77,7 +97,7 @@ def get_bristol_chart_classification():
         'title': BRISTOL_STOOLS[index]['title'],
         'description': BRISTOL_STOOLS[index]['description'],
         'img_link': BRISTOL_STOOLS[index]['img_link'],
-        'confidence': round(100 * np.max(score), 2)
+        'confidence': round(100 * confidence, 2)
     }
 
     return render_template('results.html', **context)
