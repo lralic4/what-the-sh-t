@@ -53,10 +53,9 @@ def get_bristol_chart_classification():
     filename = save_image(request)
 
     fullPath = os.path.abspath(f'./{filename}.jpeg')  # or similar, depending on your scenario
-    image_path = tf.keras.utils.get_file(f'{filename}.jpeg', 'file://'+fullPath)
 
     img = tf.keras.utils.load_img(
-        image_path, target_size=(IMG_HEIGHT, IMG_WIDTH)
+        fullPath, target_size=(IMG_HEIGHT, IMG_WIDTH)
     )
     img_array = tf.keras.utils.img_to_array(img)
     img_array = tf.expand_dims(img_array, 0) # Create a batch
