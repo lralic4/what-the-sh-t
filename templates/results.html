@@ -1,6 +1,6 @@
 {% extends 'index.html' %} {% block content %}
 <div class="container-xxl d-flex justify-content-center">
-  <div class="card" style="width: 75%">
+  <div class="card" style="width: 90%">
     <div class="card-header">
       Results - <strong>{{ confidence }}%</strong> confidence
     </div>
@@ -14,7 +14,9 @@
     <div class="card-body">
       <h5 class="card-title">{{ name }} - {{ title }}</h5>
       <p class="card-text"><strong>Description</strong> - {{ description }}</p>
-      <a href="/" class="btn btn-primary">Back</a>
+      <div class="d-grid gap-2 col-6 mx-auto">
+        <a href="/" class="btn btn-primary">Back</a>
+      </div>
     </div>
     <div class="card-footer text-body-secondary">
       * All images and descriptions were sourced from https://poopedia.org/
